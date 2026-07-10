@@ -1,0 +1,57 @@
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 12px;
+}
+.message { max-width: 70%; padding: 10px 14px; border-radius: 10px; }
+.message.user { align-self: flex-end; background: #4f46e5; color: white; }
+.message.assistant { align-self: flex-start; background: white; border: 1px solid #e5e7eb; }
+.chat-input { display: flex; gap: 8px; }
+.chat-input input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db; }
+.chat-input button { padding: 10px 16px; border: none; background: #4f46e5; color: white; border-radius: 8px; cursor: pointer; }
+
+/* Premium toggle switch styling */
+.rag-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+.rag-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 36px;
+  height: 20px;
+  background-color: #d1d5db;
+  border-radius: 20px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+.rag-option input[type="checkbox"]:checked {
+  background-color: #4f46e5;
+}
+.rag-option input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  background-color: white;
+  transition: transform 0.2s ease;
+}
+.rag-option input[type="checkbox"]:checked::before {
+  transform: translateX(16px);
+}
+

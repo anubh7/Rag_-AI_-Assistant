@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>RAG AI Assistant</title>
+
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="assets/css/navbar.css" />
+  <link rel="stylesheet" href="assets/css/sidebar.css" />
+  <link rel="stylesheet" href="assets/css/chat.css" />
+  <link rel="stylesheet" href="assets/css/upload.css" />
+
+
+</head>
+
+
+<body>
+
+
+  <!-- Navbar -->
+
+  <nav class="navbar">
+
+    <h1>
+      RAG AI Assistant
+    </h1>
+
+  </nav>
+
+
+
+
+  <div class="layout">
+
+
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar" id="sidebar">
+
+
+      <h3>
+        Collections
+      </h3>
+
+
+      <ul id="collection-list">
+
+      </ul>
+
+
+
+
+      <h3>
+        Upload Document
+      </h3>
+
+
+      <input type="file" id="file-input" />
+
+
+      <button id="upload-btn">
+
+        Upload
+
+      </button>
+
+
+      <p id="upload-status">
+
+      </p>
+
+
+
+    </aside>
+
+
+
+
+
+    <!-- Chat Area -->
+
+    <main class="chat-container">
+
+
+
+      <!-- Messages -->
+
+      <div id="messages" class="messages">
+
+      </div>
+
+
+
+
+
+      <!-- Input Area -->
+
+      <div class="chat-input">
+
+
+
+        <input type="text" id="chat-input" placeholder="Ask something about your documents..." />
+
+
+
+
+        <!-- RAG Toggle -->
+
+        <label class="rag-option">
+
+
+          <input type="checkbox" id="rag-toggle" checked />
+
+
+          Use uploaded documents
+
+
+        </label>
+
+
+
+
+
+        <button id="send-btn">
+
+          Send
+
+        </button>
+
+
+
+
+      </div>
+
+
+
+    </main>
+
+
+
+
+  </div>
+
+
+
+
+
+  <!-- JavaScript Files -->
+
+
+  <script src="assets/js/api.js"></script>
+
+  <script src="assets/js/upload.js"></script>
+
+  <script src="assets/js/chat.js"></script>
+
+  <script src="assets/js/ui.js"></script>
+
+  <script src="script.js"></script>
+
+
+
+</body>
+
+</html>

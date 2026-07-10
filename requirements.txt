@@ -1,0 +1,36 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+
+# LangChain core + integrations
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
+langchain-openai
+langchain-anthropic
+langchain-qdrant
+langchain-text-splitters
+langchain-experimental
+
+# Vector DB
+qdrant-client
+
+# Document loaders
+pypdf
+PyPDF2
+python-docx
+pandas
+openpyxl
+unstructured
+
+# LLM SDKs used by langchain integrations
+google-generativeai
+openai
+anthropic
+groq
+mistralai
+
+# Utils
+tiktoken

@@ -1,0 +1,11 @@
+.sidebar {
+  width: 260px;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 16px;
+  overflow-y: auto;
+}
+.sidebar h3 { margin: 16px 0 8px; font-size: 14px; color: #6b7280; }
+.sidebar ul { list-style: none; }
+.sidebar li { padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+.sidebar li:hover, .sidebar li.active { background: #e0e7ff; }
