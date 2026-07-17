@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - RAG AI Assistant</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --glass-bg: rgba(30, 41, 59, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --error-color: #f87171;
+      --success-color: #4ade80;
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-main);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background glows */
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: var(--primary);
+      filter: blur(120px);
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    body::before {
+      top: 15%;
+      left: 20%;
+    }
+
+    body::after {
+      bottom: 15%;
+      right: 20%;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #ffffff, #c7d2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .toggle-text {
+      margin-top: 25px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .toggle-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Status Alerts */
+    .alert {
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: none;
+      text-align: left;
+    }
+
+    .alert-error {
+      background: rgba(248, 113, 113, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      color: var(--error-color);
+    }
+
+    .alert-success {
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: var(--success-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="glass-card">
+      <h2 id="form-title">Welcome Back</h2>
+      <p class="subtitle" id="form-subtitle">Sign in to access your RAG Assistant</p>
+
+      <div id="alert-box" class="alert"></div>
+
+      <form id="auth-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn" id="submit-btn">Sign In</button>
+      </form>
+
+      <p class="toggle-text">
+        <span id="toggle-desc">Don't have an account?</span>
+        <span class="toggle-link" id="toggle-mode-btn">Register</span>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8000";
+    let isLoginMode = true;
+
+    // Elements
+    const formTitle = document.getElementById("form-title");
+    const formSubtitle = document.getElementById("form-subtitle");
+    const authForm = document.getElementById("auth-form");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const submitBtn = document.getElementById("submit-btn");
+    const toggleDesc = document.getElementById("toggle-desc");
+    const toggleModeBtn = document.getElementById("toggle-mode-btn");
+    const alertBox = document.getElementById("alert-box");
+
+    // Toggle Mode
+    toggleModeBtn.addEventListener("click", () => {
+      isLoginMode = !isLoginMode;
+      alertBox.style.display = "none";
+      authForm.reset();
+
+      if (isLoginMode) {
+        formTitle.textContent = "Welcome Back";
+        formSubtitle.textContent = "Sign in to access your RAG Assistant";
+        submitBtn.textContent = "Sign In";
+        toggleDesc.textContent = "Don't have an account?";
+        toggleModeBtn.textContent = "Register";
+        passwordInput.placeholder = "Enter your password";
+      } else {
+        formTitle.textContent = "Create Account";
+        formSubtitle.textContent = "Sign up to start chatting with your docs";
+        submitBtn.textContent = "Register";
+        toggleDesc.textContent = "Already have an account?";
+        toggleModeBtn.textContent = "Sign In";
+        passwordInput.placeholder = "Choose a strong password (min 6 chars)";
+      }
+    });
+
+    // Form Submit Handler
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      alertBox.style.display = "none";
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!username || !password) return;
+
+      if (!isLoginMode && password.length < 6) {
+        showAlert("error", "Password must be at least 6 characters long.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = isLoginMode ? "Signing In..." : "Registering...";
+
+      try {
+        const endpoint = isLoginMode ? "/auth/login" : "/auth/register";
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === "success") {
+          if (isLoginMode) {
+            // Save token info
+            localStorage.setItem("access_token", result.data.access_token);
+            localStorage.setItem("username", result.data.username);
+            localStorage.setItem("role", result.data.role);
+            
+            showAlert("success", "Login successful! Redirecting...");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1000);
+          } else {
+            showAlert("success", "Registration successful! You can now log in.");
+            setTimeout(() => {
+              toggleModeBtn.click(); // Switch to login mode
+            }, 1500);
+          }
+        } else {
+          showAlert("error", result.detail || result.message || "An error occurred during authentication.");
+        }
+      } catch (err) {
+        console.error("Auth error:", err);
+        showAlert("error", "Failed to connect to the backend server. Please verify it is running.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = isLoginMode ? "Sign In" : "Register";
+      }
+    });
+
+    function showAlert(type, message) {
+      alertBox.textContent = message;
+      alertBox.className = `alert alert-${type}`;
+      alertBox.style.display = "block";
+    }
+
+    // Direct redirection if already logged in
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>

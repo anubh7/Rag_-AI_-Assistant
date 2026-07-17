@@ -12,4 +12,5 @@ class SourceChunk(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     session_id: str
+    query: Optional[str] = None
     sources: List[SourceChunk] = []

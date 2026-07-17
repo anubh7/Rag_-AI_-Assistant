@@ -55,3 +55,204 @@
   transform: translateX(16px);
 }
 
+/* ============================================================
+   METADATA FILTER PANEL
+   ============================================================ */
+
+/* Wrapper that sits between messages area and chat-input bar */
+.filter-panel-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+  overflow: hidden;
+  margin-bottom: 6px;
+  transition: box-shadow 0.2s ease;
+}
+.filter-panel-wrapper.has-filters {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.12);
+}
+
+/* Toggle header row */
+.filter-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  user-select: none;
+}
+.filter-toggle-btn:hover { background: #f3f4f6; }
+
+.filter-toggle-icon { font-size: 15px; }
+
+.filter-toggle-label { flex: 1; text-align: left; }
+
+/* Animated chevron */
+.filter-chevron {
+  font-size: 11px;
+  transition: transform 0.2s ease;
+  color: #9ca3af;
+}
+.filter-panel-wrapper.open .filter-chevron {
+  transform: rotate(180deg);
+}
+
+/* Active-filter count badge */
+.filter-count-badge {
+  display: none;
+  background: #4f46e5;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 1px 7px;
+  margin-left: 2px;
+}
+.filter-count-badge.visible { display: inline-block; }
+
+/* Pulsing dot when filters are active */
+.filter-active-dot {
+  display: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+.filter-active-dot.visible { display: inline-block; }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* Collapsible body */
+.filter-panel-body {
+  display: none;
+  padding: 8px 12px 12px;
+  border-top: 1px solid #e5e7eb;
+  flex-direction: column;
+  gap: 8px;
+}
+.filter-panel-wrapper.open .filter-panel-body {
+  display: flex;
+}
+
+/* Individual filter row */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  animation: slide-in 0.18s ease;
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Clause badge pill (must / must_not / should) */
+.filter-clause-select {
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid #6366f1;
+  color: #4f46e5;
+  background: #eef2ff;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.15s;
+}
+.filter-clause-select:focus { background: #e0e7ff; }
+.filter-clause-select option[value="must_not"] { color: #dc2626; }
+.filter-clause-select option[value="should"]   { color: #d97706; }
+
+.filter-field-input,
+.filter-value-input {
+  flex: 1;
+  min-width: 80px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.filter-field-input:focus,
+.filter-value-input:focus { border-color: #6366f1; }
+
+.filter-type-select {
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  cursor: pointer;
+  background: white;
+}
+
+/* Remove row button */
+.filter-remove-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.filter-remove-btn:hover { background: #fca5a5; }
+
+/* Action buttons at the bottom of the panel */
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.filter-add-btn {
+  padding: 5px 12px;
+  border: 1.5px dashed #6366f1;
+  background: transparent;
+  color: #4f46e5;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.filter-add-btn:hover { background: #eef2ff; }
+.filter-clear-btn {
+  padding: 5px 12px;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.filter-clear-btn:hover { background: #e5e7eb; }
+
+/* Helper hint text */
+.filter-hint {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+

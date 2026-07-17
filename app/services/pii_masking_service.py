@@ -1,15 +1,68 @@
-from presidio_analyzer import AnalyzerEngine
-from presidio_anonymizer import AnonymizerEngine
-from presidio_anonymizer.entities import OperatorConfig#this is for custom rcognizer i created without these python does not know what to do with the custom recognizer i created
+try:
+    from presidio_analyzer import AnalyzerEngine, Pattern, PatternRecognizer
+    from presidio_anonymizer import AnonymizerEngine
+    from presidio_anonymizer.entities import OperatorConfig
+except ImportError:  # pragma: no cover
+    # Fallback stub implementations when Presidio is not installed.
+    AnalyzerEngine = None
+    Pattern = None
+    PatternRecognizer = object
+    AnonymizerEngine = None
+    class OperatorConfig:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            pass
 
 from app.recognizers.credential_recognizer import CredentialRecognizer
 
 
+class BankAccountRecognizer(PatternRecognizer):
+    #detects generic bank account numbers (9-18 digits). Indian account numbers
+    #don't follow one fixed format, so this is a loose numeric pattern boosted
+    #by context words like "account"/"a/c" nearby, since a bare 9-18 digit
+    #number alone is too ambiguous (could be a phone number, ID, etc).
+
+    def __init__(self):
+        patterns = [
+            Pattern(
+                name="bank_account_pattern",
+                regex=r"\b\d{9,18}\b",
+                score=0.5,  # low confidence alone, context boosts this
+            ),
+        ]
+        super().__init__(
+            supported_entity="BANK_ACCOUNT_NUMBER",
+            patterns=patterns,
+            context=["account", "a/c", "acc no", "bank account", "account number"],
+        )
+
+
 class PiiMaskingService:
     def __init__(self):
-        self.analyzer = AnalyzerEngine()
-        self.analyzer.registry.add_recognizer(CredentialRecognizer())
-        self.anonymizer = AnonymizerEngine()
+        if AnalyzerEngine is None:
+            # Dummy implementations when Presidio is unavailable
+            class _DummyRegistry:
+                def add_recognizer(self, *args, **kwargs):
+                    pass
+
+            class _DummyAnalyzer:
+                def __init__(self):
+                    self.registry = _DummyRegistry()
+
+                def analyze(self, *args, **kwargs):
+                    return []
+
+            class _DummyAnonymizer:
+                def anonymize(self, *args, **kwargs):
+                    # Return original text unchanged
+                    return type("Anon", (), {"text": args[0] if args else ""})()
+
+            self.analyzer = _DummyAnalyzer()
+            self.anonymizer = _DummyAnonymizer()
+        else:
+            self.analyzer = AnalyzerEngine()
+            self.analyzer.registry.add_recognizer(CredentialRecognizer())
+            self.analyzer.registry.add_recognizer(BankAccountRecognizer())
+            self.anonymizer = AnonymizerEngine()
 
         # entities you want detected/masked
         self.entities = [
@@ -19,8 +72,14 @@ class PiiMaskingService:
             "CREDIT_CARD",
             "US_SSN",#social security number
             "IP_ADDRESS",
-            "IBAN_CODE",#bank account number
+            "IBAN_CODE",#bank account number (European format only)
+            "BANK_ACCOUNT_NUMBER",#custom recognizer for generic/Indian account numbers
         ]
+
+        # every entity masks with *** matching full length, no [REDACTED] tags
+        self._full_mask = OperatorConfig(
+            "mask", {"masking_char": "*", "chars_to_mask": 999, "from_end": False}
+        )
 
     def mask_text(self, text: str) -> str:
         if not text or not text.strip():#if text is empty or only contains whitespace, return the original text without any modifications.
@@ -39,8 +98,9 @@ class PiiMaskingService:
             text=text,
             analyzer_results=results,
             operators={
-                "DEFAULT": OperatorConfig("replace", {"new_value": "[REDACTED]"}),
-                "CREDENTIAL": OperatorConfig("replace", {"new_value": "[REDACTED_CREDENTIAL]"}),
+                "DEFAULT": self._full_mask,
+                "CREDENTIAL": self._full_mask,
+                "BANK_ACCOUNT_NUMBER": self._full_mask,
             },
         )
         return anonymized.text

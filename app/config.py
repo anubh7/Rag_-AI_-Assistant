@@ -47,7 +47,7 @@ class Settings:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
     GEMINI_CHAT_MODEL = os.getenv(
         "GEMINI_CHAT_MODEL",
-        "gemini-2.5-flash"
+         "gemini-flash-latest"
     )
 
     # ---------------- Chunking ----------------
@@ -70,6 +70,25 @@ class Settings:
         ".docx",
         ".txt",
     }
+
+    # ---------------- Database ----------------
+    MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
+    MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))
+    MYSQL_USER = os.getenv("MYSQL_USER", "root")
+    MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
+    MYSQL_DB = os.getenv("MYSQL_DB", "rag_assistant_db")
+
+    @property
+    def DATABASE_URL(self) -> str:
+        import urllib.parse
+        encoded_user = urllib.parse.quote_plus(self.MYSQL_USER)
+        encoded_password = urllib.parse.quote_plus(self.MYSQL_PASSWORD)
+        return f"mysql+pymysql://{encoded_user}:{encoded_password}@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB}?charset=utf8mb4"
+
+    # ---------------- Security ----------------
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "yoursupersecretkeyhere")
+    JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
 
 
 settings = Settings()

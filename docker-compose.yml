@@ -18,6 +18,7 @@ services:
     environment:
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      - QDRANT_URL=http://qdrant:6333
     depends_on:
       - qdrant
     volumes:

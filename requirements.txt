@@ -41,3 +41,10 @@ tiktoken
 presidio-analyzer==2.2.355
 presidio-anonymizer==2.2.355
 spacy==3.7.5
+
+# Database & Authentication
+sqlalchemy
+pymysql
+cryptography
+passlib[bcrypt]
+python-jose[cryptography]

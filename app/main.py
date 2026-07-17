@@ -7,26 +7,31 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import upload, chat, models, collection, health
+from app.routers import upload, chat, models, collection, health, auth
 from app.utils.exceptions import AppException
 from app.utils.response import error_response
+from app.database.connection import engine, Base
+# Make sure database models are imported so SQLAlchemy metadata registers them
+from app.database import models as db_models
+
+# Initialize SQL database tables on startup
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"Database initialization warning (make sure database credentials are set in .env): {e}")
 
 
 app = FastAPI(
     title=settings.APP_NAME,
-    version=settings.APP_VERSION
+    version=settings.APP_VERSION,
+    openapi_version="3.0.3"
 )
 
 
 # CORS configuration for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:8080",
-        "http://127.0.0.1:8080",
-    ],
+    allow_origins=["*"],  # Allow any origin for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,6 +51,13 @@ app.include_router(
     prefix="/health",
     tags=["Health"]
 )
+
+app.include_router(
+    auth.router,
+    prefix="/auth",
+    tags=["Auth"]
+)
+
 
 app.include_router(
     upload.router,

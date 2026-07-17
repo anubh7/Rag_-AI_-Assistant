@@ -6,7 +6,8 @@ from fastapi.responses import JSONResponse
 
 from app.models.collection_request import CollectionRequest
 from app.services.collection_service import CollectionService
-from app.dependencies import get_collection_service
+from app.dependencies import get_collection_service, get_current_user, check_admin
+from app.database.models import User
 from app.utils.response import success_response, error_response
 from app.utils.exceptions import AppException
 
@@ -14,7 +15,10 @@ router = APIRouter()
 
 
 @router.get("/")
-def list_collections(service: CollectionService = Depends(get_collection_service)):
+def list_collections(
+    service: CollectionService = Depends(get_collection_service),
+    current_user: User = Depends(get_current_user)
+):
     return success_response("Collections fetched.", data=service.list_collections())
 
 
@@ -22,6 +26,7 @@ def list_collections(service: CollectionService = Depends(get_collection_service
 def create_collection(
     request: CollectionRequest,
     service: CollectionService = Depends(get_collection_service),
+    admin_user: User = Depends(check_admin),
 ):
     try:
         result = service.create_collection(request.collection_name, request.vector_size)
@@ -34,9 +39,11 @@ def create_collection(
 def delete_collection(
     collection_name: str,
     service: CollectionService = Depends(get_collection_service),
+    admin_user: User = Depends(check_admin),
 ):
     try:
         result = service.delete_collection(collection_name)
         return success_response("Collection deleted.", data=result)
     except AppException as e:
         return JSONResponse(status_code=e.status_code, content=error_response(e.message).dict())
+

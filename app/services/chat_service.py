@@ -32,11 +32,24 @@ class ChatService:
     def chat(
         self,
         query: str,
+        db,
+        user_id: int,
         session_id: str = "default",
         collection_name: str = None,
         top_k: int = None,
         use_rag: bool = True,
+        filters=None,
     ) -> ChatResponse:
+        """
+        Orchestrate RAG retrieval + LLM response generation.
+
+        Args:
+            filters: Optional SearchFilters pydantic model. When provided, Qdrant
+                     pre-filters the vector space by metadata BEFORE semantic search.
+                     Supports must / must_not / should with match / match_any clauses.
+        """
+        from app.utils.pii_filter import mask_pii
+        query = mask_pii(query)
         sources: List[SourceChunk] = []
 
         if use_rag:
@@ -47,7 +60,10 @@ class ChatService:
                     use_rag = False
                 else:
                     results = self.retrieval_service.retrieve(
-                        query=query, collection_name=coll_name, top_k=top_k
+                        query=query,
+                        collection_name=coll_name,
+                        top_k=top_k,
+                        filters=filters,
                     )
                     if not results or max(score for _, score in results) < settings.SCORE_THRESHOLD:
                         logger.info("No relevant document chunks found matching the query. Falling back to general LLM.")
@@ -74,11 +90,24 @@ class ChatService:
 
         try:
             ai_message = self.llm.invoke(messages)
-            answer = ai_message.content
+            raw_content = ai_message.content
+            # Gemini may return content as a list of dicts (content parts)
+            # instead of a plain string — coerce it to a string for storage.
+            if isinstance(raw_content, list):
+                answer = "\n".join(
+                    part.get("text", str(part)) if isinstance(part, dict) else str(part)
+                    for part in raw_content
+                )
+            else:
+                answer = str(raw_content)
         except Exception as e:
             raise LLMGenerationError(str(e))
 
-        self.history.add_message(session_id, "user", query)
-        self.history.add_message(session_id, "assistant", answer)
+        # Mask assistant response before saving to history
+        answer = mask_pii(answer)
 
-        return ChatResponse(answer=answer, session_id=session_id, sources=sources)
+        self.history.add_message(db, session_id, "user", query, user_id)
+        self.history.add_message(db, session_id, "assistant", answer, user_id)
+
+        return ChatResponse(answer=answer, session_id=session_id, query=query, sources=sources)
+

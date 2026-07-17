@@ -48,6 +48,22 @@
 
     <aside class="sidebar" id="sidebar">
 
+      <!-- User Profile Header -->
+      <div class="user-profile">
+        <span id="user-display">Loading...</span>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </div>
+
+      <!-- Chat Sessions -->
+      <div class="sidebar-section">
+        <div class="section-header">
+          <h3>Chat History</h3>
+          <button id="new-chat-btn" class="new-chat-btn" title="New Chat">+</button>
+        </div>
+        <ul id="session-list">
+          <!-- Dynamically populated -->
+        </ul>
+      </div>
 
       <h3>
         Collections
@@ -62,11 +78,17 @@
 
 
       <h3>
-        Upload Document
+        Upload Documents
       </h3>
 
 
-      <input type="file" id="file-input" />
+      <input
+        type="file"
+        id="file-input"
+        multiple
+        accept=".pdf,.docx,.txt,.csv,.xlsx,.xls"
+        title="Select one or more files to upload"
+      />
 
 
       <button id="upload-btn">
@@ -76,13 +98,12 @@
       </button>
 
 
-      <p id="upload-status">
-
-      </p>
+      <div id="upload-status"></div>
 
 
 
     </aside>
+
 
 
 
@@ -102,6 +123,38 @@
 
 
 
+
+
+      <!-- Metadata Filter Panel -->
+      <div class="filter-panel-wrapper" id="filter-panel-wrapper">
+
+        <!-- Collapsible toggle header -->
+        <button class="filter-toggle-btn" id="filter-toggle-btn" type="button" aria-expanded="false">
+          <span class="filter-toggle-icon">🔍</span>
+          <span class="filter-toggle-label">Metadata Filters</span>
+          <span class="filter-active-dot" id="filter-active-dot"></span>
+          <span class="filter-count-badge" id="filter-count-badge">0</span>
+          <span class="filter-chevron">▼</span>
+        </button>
+
+        <!-- Collapsible body -->
+        <div class="filter-panel-body" id="filter-panel-body">
+
+          <!-- Filter rows are injected here dynamically -->
+          <div id="filter-rows-container"></div>
+
+          <p class="filter-hint">
+            Fields stored in document metadata, e.g.: <code>source</code>, <code>file_type</code>, <code>author</code>, <code>page</code>
+          </p>
+
+          <!-- Action buttons -->
+          <div class="filter-actions">
+            <button class="filter-add-btn" id="filter-add-btn" type="button">＋ Add Filter</button>
+            <button class="filter-clear-btn" id="filter-clear-btn" type="button">✕ Clear All</button>
+          </div>
+
+        </div>
+      </div>
 
 
       <!-- Input Area -->
@@ -157,17 +210,13 @@
 
 
   <!-- JavaScript Files -->
-
-
+  <script src="assets/js/auth.js"></script>
   <script src="assets/js/api.js"></script>
-
   <script src="assets/js/upload.js"></script>
-
   <script src="assets/js/chat.js"></script>
-
   <script src="assets/js/ui.js"></script>
-
   <script src="script.js"></script>
+
 
 
 
