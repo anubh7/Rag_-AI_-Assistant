@@ -3,43 +3,108 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-bottom: 12px;
+  gap: 14px;
+  padding: 10px 6px 16px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
 }
-.message { max-width: 70%; padding: 10px 14px; border-radius: 10px; }
-.message.user { align-self: flex-end; background: #4f46e5; color: white; }
-.message.assistant { align-self: flex-start; background: white; border: 1px solid #e5e7eb; }
-.chat-input { display: flex; gap: 8px; }
-.chat-input input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db; }
-.chat-input button { padding: 10px 16px; border: none; background: #4f46e5; color: white; border-radius: 8px; cursor: pointer; }
 
-/* Premium toggle switch styling */
+.message {
+  max-width: min(70%, 760px);
+  padding: 14px 18px;
+  border-radius: 18px 18px 18px 8px;
+  line-height: 1.5;
+  font-size: 0.96rem;
+  box-shadow: 0 14px 24px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: white;
+  border-radius: 18px 18px 8px 18px;
+  box-shadow: 0 18px 30px rgba(99, 102, 241, 0.25);
+}
+
+.message.assistant {
+  align-self: flex-start;
+  background: rgba(15, 23, 42, 0.72);
+  color: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 16px 30px rgba(2, 6, 23, 0.2);
+}
+
+.chat-input input {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  outline: none;
+}
+
+.chat-input input:focus {
+  border-color: rgba(129, 140, 248, 0.8);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+
+.chat-input button {
+  padding: 12px 18px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #14b8a6);
+  color: white;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 20px rgba(20, 184, 166, 0.22);
+}
+
+.chat-input button:hover {
+  transform: translateY(-1px);
+}
+
 .rag-option {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: #4b5563;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
 }
+
 .rag-option input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 36px;
+  width: 38px;
   height: 20px;
-  background-color: #d1d5db;
-  border-radius: 20px;
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
   position: relative;
   outline: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
   flex-shrink: 0;
 }
+
 .rag-option input[type="checkbox"]:checked {
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
 }
+
 .rag-option input[type="checkbox"]::before {
   content: "";
   position: absolute;
@@ -51,100 +116,98 @@
   background-color: white;
   transition: transform 0.2s ease;
 }
+
 .rag-option input[type="checkbox"]:checked::before {
-  transform: translateX(16px);
+  transform: translateX(18px);
 }
 
-/* ============================================================
-   METADATA FILTER PANEL
-   ============================================================ */
-
-/* Wrapper that sits between messages area and chat-input bar */
 .filter-panel-wrapper {
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #fafafa;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.5);
   overflow: hidden;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   transition: box-shadow 0.2s ease;
 }
+
 .filter-panel-wrapper.has-filters {
-  border-color: #818cf8;
-  box-shadow: 0 0 0 2px rgba(99,102,241,0.12);
+  border-color: rgba(129, 140, 248, 0.5);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
 }
 
-/* Toggle header row */
 .filter-toggle-btn {
   width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  background: none;
+  padding: 10px 12px;
+  background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: #4b5563;
+  font-size: 12px;
+  font-weight: 700;
+  color: #dbeafe;
   user-select: none;
 }
-.filter-toggle-btn:hover { background: #f3f4f6; }
 
-.filter-toggle-icon { font-size: 15px; }
+.filter-toggle-btn:hover {
+  background: rgba(148, 163, 184, 0.05);
+}
 
+.filter-toggle-icon { font-size: 14px; }
 .filter-toggle-label { flex: 1; text-align: left; }
 
-/* Animated chevron */
 .filter-chevron {
   font-size: 11px;
   transition: transform 0.2s ease;
-  color: #9ca3af;
+  color: #cbd5e1;
 }
+
 .filter-panel-wrapper.open .filter-chevron {
   transform: rotate(180deg);
 }
 
-/* Active-filter count badge */
 .filter-count-badge {
   display: none;
-  background: #4f46e5;
+  background: linear-gradient(135deg, #8b5cf6, #4f46e5);
   color: white;
   font-size: 11px;
   font-weight: 700;
-  border-radius: 20px;
+  border-radius: 999px;
   padding: 1px 7px;
   margin-left: 2px;
 }
+
 .filter-count-badge.visible { display: inline-block; }
 
-/* Pulsing dot when filters are active */
 .filter-active-dot {
   display: none;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #22c55e;
+  background: #4ade80;
   animation: pulse-dot 1.4s ease-in-out infinite;
 }
+
 .filter-active-dot.visible { display: inline-block; }
+
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(1.4); }
+  50% { opacity: 0.5; transform: scale(1.4); }
 }
 
-/* Collapsible body */
 .filter-panel-body {
   display: none;
-  padding: 8px 12px 12px;
-  border-top: 1px solid #e5e7eb;
+  padding: 10px 12px 12px;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
   flex-direction: column;
   gap: 8px;
 }
+
 .filter-panel-wrapper.open .filter-panel-body {
   display: flex;
 }
 
-/* Individual filter row */
 .filter-row {
   display: flex;
   align-items: center;
@@ -152,107 +215,108 @@
   flex-wrap: wrap;
   animation: slide-in 0.18s ease;
 }
+
 @keyframes slide-in {
   from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Clause badge pill (must / must_not / should) */
 .filter-clause-select {
   padding: 4px 8px;
-  border-radius: 20px;
-  font-size: 12px;
+  border-radius: 999px;
+  font-size: 11px;
   font-weight: 700;
-  border: 1.5px solid #6366f1;
-  color: #4f46e5;
-  background: #eef2ff;
+  border: 1px solid rgba(129, 140, 248, 0.5);
+  color: #c7d2fe;
+  background: rgba(79, 70, 229, 0.12);
   cursor: pointer;
   outline: none;
-  transition: background 0.15s;
 }
-.filter-clause-select:focus { background: #e0e7ff; }
-.filter-clause-select option[value="must_not"] { color: #dc2626; }
-.filter-clause-select option[value="should"]   { color: #d97706; }
+
+.filter-clause-select option[value="must_not"] { color: #fca5a5; }
+.filter-clause-select option[value="should"] { color: #fbbf24; }
 
 .filter-field-input,
 .filter-value-input {
   flex: 1;
   min-width: 80px;
-  padding: 5px 8px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 13px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  font-size: 12px;
+  color: #e2e8f0;
   outline: none;
-  transition: border-color 0.15s;
 }
+
 .filter-field-input:focus,
-.filter-value-input:focus { border-color: #6366f1; }
+.filter-value-input:focus {
+  border-color: rgba(129, 140, 248, 0.8);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
+}
 
 .filter-type-select {
   padding: 4px 6px;
-  border-radius: 6px;
-  font-size: 12px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  cursor: pointer;
-  background: white;
+  border-radius: 8px;
+  font-size: 11px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e2e8f0;
 }
 
-/* Remove row button */
 .filter-remove-btn {
   width: 24px;
   height: 24px;
   border: none;
-  background: #fee2e2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
   border-radius: 50%;
   font-size: 14px;
-  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.15s;
 }
-.filter-remove-btn:hover { background: #fca5a5; }
 
-/* Action buttons at the bottom of the panel */
 .filter-actions {
   display: flex;
   gap: 8px;
   margin-top: 4px;
 }
+
 .filter-add-btn {
   padding: 5px 12px;
-  border: 1.5px dashed #6366f1;
+  border: 1px dashed rgba(129, 140, 248, 0.8);
   background: transparent;
-  color: #4f46e5;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
+  color: #c7d2fe;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
 }
-.filter-add-btn:hover { background: #eef2ff; }
+
 .filter-clear-btn {
   padding: 5px 12px;
   border: none;
-  background: #f3f4f6;
-  color: #6b7280;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s;
 }
-.filter-clear-btn:hover { background: #e5e7eb; }
 
-/* Helper hint text */
 .filter-hint {
   font-size: 11px;
-  color: #9ca3af;
+  color: #94a3b8;
   margin-top: 2px;
+}
+
+.filter-hint code {
+  color: #c4b5fd;
+  background: rgba(99, 102, 241, 0.12);
+  border-radius: 6px;
+  padding: 2px 5px;
 }
 
 

@@ -3,13 +3,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
-# Create engine with pre-ping to check database liveness and pool recycle
-# to prevent timeout errors from MySQL
-engine = create_engine(
-    settings.DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=3600
-)
+# SQLite does not support MySQL-specific pool_pre_ping flags; keep the MySQL settings
+# when configured, but let local/dev usage fall back to SQLite without startup errors.
+engine_kwargs = {}
+if settings.DATABASE_URL.startswith("mysql"):
+    engine_kwargs.update({
+        "pool_pre_ping": True,
+        "pool_recycle": 3600,
+    })
+
+engine = create_engine(settings.DATABASE_URL, **engine_kwargs)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

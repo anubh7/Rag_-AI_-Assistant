@@ -80,6 +80,19 @@ class Settings:
 
     @property
     def DATABASE_URL(self) -> str:
+        database_url = os.getenv("DATABASE_URL")
+        if database_url:
+            return database_url
+
+        # Default to SQLite for local/dev runs when no real MySQL credentials are configured.
+        # This avoids startup crashes in environments where MySQL is not installed or the
+        # default root account is unavailable.
+        mysql_user = (self.MYSQL_USER or "").strip()
+        mysql_password = (self.MYSQL_PASSWORD or "").strip()
+        if mysql_user == "root" and mysql_password == "" and self.MYSQL_HOST in {"localhost", "127.0.0.1"}:
+            sqlite_path = os.path.join(os.getcwd(), "app.db")
+            return f"sqlite:///{sqlite_path}"
+
         import urllib.parse
         encoded_user = urllib.parse.quote_plus(self.MYSQL_USER)
         encoded_password = urllib.parse.quote_plus(self.MYSQL_PASSWORD)

@@ -36,6 +36,293 @@
       position: relative;
     }
 
+    .login-scene {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+      perspective: 900px;
+    }
+
+    .login-orb {
+      position: absolute;
+      border-radius: 42% 58% 63% 37% / 45% 44% 56% 55%;
+      transform-style: preserve-3d;
+      box-shadow:
+        inset -22px -25px 42px rgba(2, 6, 23, 0.42),
+        inset 18px 15px 30px rgba(255, 255, 255, 0.22),
+        0 28px 60px rgba(2, 6, 23, 0.42);
+      animation: login-float 12s ease-in-out infinite alternate;
+    }
+
+    .login-orb-main {
+      width: 230px;
+      height: 230px;
+      top: 9%;
+      left: 13%;
+      opacity: 0.75;
+      background: linear-gradient(135deg, #22d3ee 5%, #2563eb 58%, #312e81);
+    }
+
+    .login-orb-small {
+      width: 105px;
+      height: 105px;
+      right: 16%;
+      bottom: 18%;
+      opacity: 0.82;
+      background: linear-gradient(135deg, #f0abfc, #a855f7 58%, #4c1d95);
+      animation-delay: -4s;
+    }
+
+    .login-orb-pink {
+      width: 72px;
+      height: 72px;
+      left: 28%;
+      bottom: 16%;
+      opacity: 0.8;
+      background: linear-gradient(135deg, #fda4af, #db2777 60%, #500724);
+      animation-delay: -8s;
+    }
+
+    .login-ring {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      left: 4%;
+      top: 3%;
+      border: 1px solid rgba(103, 232, 249, 0.22);
+      border-radius: 50%;
+      transform: rotateX(65deg) rotateZ(-28deg);
+      box-shadow:
+        0 0 0 18px rgba(103, 232, 249, 0.035),
+        0 0 0 38px rgba(103, 232, 249, 0.025),
+        0 0 0 58px rgba(103, 232, 249, 0.015);
+      animation: login-spin 22s linear infinite;
+    }
+
+    .login-grid {
+      position: absolute;
+      right: -40px;
+      bottom: 8%;
+      width: 310px;
+      height: 220px;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(196, 181, 253, 0.45) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196, 181, 253, 0.45) 1px, transparent 1px);
+      background-size: 26px 26px;
+      transform: perspective(500px) rotateX(62deg) rotateZ(-12deg);
+      mask-image: linear-gradient(to bottom, transparent, #000 35%, transparent);
+      animation: login-grid-drift 9s ease-in-out infinite alternate;
+    }
+
+    .bot-mascot {
+      position: absolute;
+      right: 12%;
+      top: 18%;
+      width: 170px;
+      height: 190px;
+      transform-style: preserve-3d;
+      animation: bot-hover 4.5s ease-in-out infinite;
+      filter: drop-shadow(0 28px 18px rgba(2, 6, 23, 0.42));
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .bot-mascot::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border: 1px solid rgba(103, 232, 249, 0);
+      border-radius: 46%;
+      transform: scale(0.7);
+      opacity: 0;
+    }
+
+    .bot-mascot.is-excited {
+      animation: bot-excited 0.85s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .bot-mascot.is-excited::after {
+      animation: bot-ripple 0.85s ease-out;
+    }
+
+    .bot-mascot.is-excited .bot-arm-left {
+      animation: bot-wave-left 0.85s ease-in-out;
+    }
+
+    .bot-mascot.is-excited .bot-arm-right {
+      animation: bot-wave-right 0.85s ease-in-out;
+    }
+
+    .bot-mascot.is-excited .bot-eye {
+      animation: bot-happy-eyes 0.85s ease-in-out;
+    }
+
+    .bot-mascot.is-excited .bot-body::before {
+      animation: bot-heart 0.85s ease-in-out;
+    }
+
+    .bot-antenna {
+      position: absolute;
+      top: 0;
+      left: 82px;
+      width: 6px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(#67e8f9, #6366f1);
+      box-shadow: 0 0 16px #22d3ee;
+    }
+
+    .bot-antenna::before {
+      content: "";
+      position: absolute;
+      top: -9px;
+      left: -5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #a5f3fc;
+      box-shadow: 0 0 20px #22d3ee;
+      animation: bot-blink 2s ease-in-out infinite;
+    }
+
+    .bot-head {
+      position: absolute;
+      top: 24px;
+      left: 19px;
+      width: 132px;
+      height: 92px;
+      border: 2px solid rgba(165, 243, 252, 0.65);
+      border-radius: 38px 38px 30px 30px;
+      background: linear-gradient(145deg, rgba(125, 211, 252, 0.9), rgba(79, 70, 229, 0.86) 62%, rgba(30, 27, 75, 0.95));
+      box-shadow: inset -15px -13px 20px rgba(15, 23, 42, 0.5), inset 10px 9px 15px rgba(255, 255, 255, 0.28), 0 14px 25px rgba(37, 99, 235, 0.3);
+      transform: rotateX(8deg) rotateY(-12deg);
+    }
+
+    .bot-face {
+      position: absolute;
+      inset: 17px 13px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #07152f, #111827);
+      border: 1px solid rgba(103, 232, 249, 0.4);
+      box-shadow: inset 0 0 22px rgba(34, 211, 238, 0.16);
+    }
+
+    .bot-eye {
+      position: absolute;
+      top: 29px;
+      width: 14px;
+      height: 20px;
+      border-radius: 50%;
+      background: #67e8f9;
+      box-shadow: 0 0 15px #22d3ee;
+      animation: bot-blink 3.2s ease-in-out infinite;
+    }
+
+    .bot-eye-left { left: 27px; }
+    .bot-eye-right { right: 27px; animation-delay: 0.1s; }
+
+    .bot-mouth {
+      position: absolute;
+      left: 43px;
+      bottom: 17px;
+      width: 30px;
+      height: 8px;
+      border-bottom: 2px solid #a5f3fc;
+      border-radius: 50%;
+    }
+
+    .bot-body {
+      position: absolute;
+      left: 37px;
+      top: 115px;
+      width: 100px;
+      height: 62px;
+      border: 2px solid rgba(196, 181, 253, 0.5);
+      border-radius: 26px 26px 18px 18px;
+      background: linear-gradient(145deg, #8b5cf6, #312e81 70%);
+      box-shadow: inset -12px -10px 20px rgba(15, 23, 42, 0.5), inset 8px 7px 12px rgba(255, 255, 255, 0.18), 0 12px 20px rgba(76, 29, 149, 0.3);
+      transform: rotateX(8deg);
+    }
+
+    .bot-body::before {
+      content: "✦";
+      position: absolute;
+      left: 40px;
+      top: 17px;
+      color: #a5f3fc;
+      font-size: 22px;
+      text-shadow: 0 0 14px #22d3ee;
+    }
+
+    .bot-arm {
+      position: absolute;
+      top: 125px;
+      width: 18px;
+      height: 49px;
+      border-radius: 15px;
+      background: linear-gradient(#67e8f9, #4f46e5);
+      box-shadow: 0 8px 14px rgba(37, 99, 235, 0.25);
+    }
+
+    .bot-arm-left { left: 18px; transform: rotate(20deg); }
+    .bot-arm-right { right: 18px; transform: rotate(-20deg); }
+
+    @keyframes bot-hover {
+      0%, 100% { transform: translateY(0) rotateY(-8deg) rotateZ(-2deg); }
+      50% { transform: translateY(-16px) rotateY(8deg) rotateZ(2deg); }
+    }
+
+    @keyframes bot-excited {
+      0% { transform: translateY(0) rotateZ(0) scale(1); }
+      25% { transform: translateY(-22px) rotateZ(-8deg) scale(1.08); }
+      50% { transform: translateY(-6px) rotateZ(8deg) scale(1.04); }
+      75% { transform: translateY(-18px) rotateZ(-4deg) scale(1.06); }
+      100% { transform: translateY(0) rotateZ(0) scale(1); }
+    }
+
+    @keyframes bot-ripple {
+      0% { opacity: 0.65; transform: scale(0.7); border-color: rgba(103, 232, 249, 0.65); }
+      100% { opacity: 0; transform: scale(1.35); border-color: rgba(167, 139, 250, 0); }
+    }
+
+    @keyframes bot-wave-left {
+      50% { transform: rotate(48deg) translateY(-8px); }
+    }
+
+    @keyframes bot-wave-right {
+      50% { transform: rotate(-48deg) translateY(-8px); }
+    }
+
+    @keyframes bot-happy-eyes {
+      50% { transform: scaleY(0.2) scaleX(1.2); background: #f0abfc; }
+    }
+
+    @keyframes bot-heart {
+      50% { transform: scale(1.35); color: #f0abfc; text-shadow: 0 0 24px #f0abfc; }
+    }
+
+    @keyframes bot-blink {
+      0%, 44%, 48%, 100% { transform: scaleY(1); opacity: 1; }
+      46% { transform: scaleY(0.12); opacity: 0.6; }
+    }
+
+    @keyframes login-float {
+      0% { transform: translate3d(-16px, 12px, 0) rotate(-9deg) scale(0.94); }
+      100% { transform: translate3d(20px, -20px, 80px) rotate(16deg) scale(1.08); }
+    }
+
+    @keyframes login-spin {
+      to { transform: rotateX(65deg) rotateZ(332deg); }
+    }
+
+    @keyframes login-grid-drift {
+      to { transform: perspective(500px) rotateX(62deg) rotateZ(-5deg) translateY(-16px); }
+    }
+
     /* Animated background glows */
     body::before, body::after {
       content: "";
@@ -61,7 +348,7 @@
 
     .container {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       width: 100%;
       max-width: 420px;
       padding: 20px;
@@ -76,6 +363,25 @@
       padding: 40px 30px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       text-align: center;
+    }
+
+    .brand-symbol {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 18px;
+      border: 1px solid rgba(103, 232, 249, 0.42);
+      border-radius: 17px;
+      color: #67e8f9;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(124, 58, 237, 0.34));
+      box-shadow: 0 0 28px rgba(34, 211, 238, 0.2), inset 0 1px rgba(255, 255, 255, 0.22);
+      font-size: 27px;
+      animation: symbol-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes symbol-pulse {
+      50% { transform: translateY(-4px) rotate(4deg); box-shadow: 0 0 42px rgba(34, 211, 238, 0.3), inset 0 1px rgba(255, 255, 255, 0.3); }
     }
 
     h2 {
@@ -187,12 +493,46 @@
       border: 1px solid rgba(74, 222, 128, 0.3);
       color: var(--success-color);
     }
+
+    @media (max-width: 700px) {
+      .login-orb-main { left: -80px; top: 3%; }
+      .login-ring { left: -130px; top: -30px; }
+      .login-grid { right: -100px; }
+      .login-orb-small { right: -20px; bottom: 8%; }
+      .bot-mascot { right: -30px; top: 7%; transform: scale(0.7); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .login-orb, .login-ring, .login-grid, .brand-symbol, .bot-mascot, .bot-eye, .bot-antenna::before { animation: none; }
+    }
   </style>
 </head>
 <body>
 
+  <div class="login-scene" aria-hidden="true">
+    <div class="login-orb login-orb-main"></div>
+    <div class="login-orb login-orb-small"></div>
+    <div class="login-orb login-orb-pink"></div>
+    <div class="login-ring"></div>
+    <div class="login-grid"></div>
+    <div class="bot-mascot">
+      <div class="bot-antenna"></div>
+      <div class="bot-head">
+        <div class="bot-face">
+          <span class="bot-eye bot-eye-left"></span>
+          <span class="bot-eye bot-eye-right"></span>
+          <span class="bot-mouth"></span>
+        </div>
+      </div>
+      <div class="bot-arm bot-arm-left"></div>
+      <div class="bot-arm bot-arm-right"></div>
+      <div class="bot-body"></div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="glass-card">
+      <div class="brand-symbol">✦</div>
       <h2 id="form-title">Welcome Back</h2>
       <p class="subtitle" id="form-subtitle">Sign in to access your RAG Assistant</p>
 
@@ -231,6 +571,14 @@
     const toggleDesc = document.getElementById("toggle-desc");
     const toggleModeBtn = document.getElementById("toggle-mode-btn");
     const alertBox = document.getElementById("alert-box");
+    const botMascot = document.querySelector(".bot-mascot");
+
+    botMascot.addEventListener("click", () => {
+      botMascot.classList.remove("is-excited");
+      void botMascot.offsetWidth;
+      botMascot.classList.add("is-excited");
+      window.setTimeout(() => botMascot.classList.remove("is-excited"), 900);
+    });
 
     // Toggle Mode
     toggleModeBtn.addEventListener("click", () => {

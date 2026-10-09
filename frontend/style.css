@@ -1,4 +1,274 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-body { height: 100vh; display: flex; flex-direction: column; background: #f5f6fa; }
-.layout { flex: 1; display: flex; overflow: hidden; }
-main.chat-container { flex: 1; display: flex; flex-direction: column; padding: 16px; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.28), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.24), transparent 28%),
+    linear-gradient(135deg, #050b1a 0%, #0b1120 35%, #111827 100%);
+  color: #e2e8f0;
+  overflow: hidden;
+  position: relative;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.38;
+  z-index: 0;
+}
+
+body::before {
+  top: 8%;
+  left: 8%;
+  background: rgba(34, 211, 238, 0.33);
+}
+
+body::after {
+  right: 7%;
+  bottom: 6%;
+  background: rgba(168, 85, 247, 0.3);
+}
+
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 900px;
+}
+
+.orb {
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  border-radius: 42% 58% 63% 37% / 45% 44% 56% 55%;
+  opacity: 0.34;
+  filter: blur(1px);
+  transform-style: preserve-3d;
+  box-shadow: inset -22px -26px 45px rgba(2, 6, 23, 0.35),
+    inset 18px 16px 35px rgba(255, 255, 255, 0.22),
+    0 25px 55px rgba(2, 6, 23, 0.3);
+  animation: float-orb 14s ease-in-out infinite alternate;
+}
+
+.orb-cyan {
+  top: 17%;
+  left: 38%;
+  background: linear-gradient(135deg, #22d3ee, #2563eb 62%, #172554);
+}
+
+.orb-violet {
+  right: 13%;
+  top: 18%;
+  width: 110px;
+  height: 110px;
+  background: linear-gradient(135deg, #c084fc, #7c3aed 65%, #312e81);
+  animation-delay: -5s;
+}
+
+.orb-pink {
+  left: 23%;
+  bottom: 10%;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #f9a8d4, #db2777 62%, #4c0519);
+  animation-delay: -9s;
+}
+
+.wireframe {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border: 1px solid rgba(125, 211, 252, 0.15);
+  transform: rotateX(68deg) rotateZ(28deg);
+  box-shadow: 0 0 0 14px rgba(125, 211, 252, 0.025),
+    0 0 0 28px rgba(125, 211, 252, 0.02),
+    0 0 0 42px rgba(125, 211, 252, 0.015);
+  animation: spin-wireframe 24s linear infinite;
+}
+
+.wireframe-left {
+  left: -80px;
+  bottom: 5%;
+}
+
+.wireframe-right {
+  right: -90px;
+  top: 10%;
+  border-color: rgba(196, 181, 253, 0.14);
+  animation-direction: reverse;
+}
+
+@keyframes float-orb {
+  0% { transform: translate3d(-18px, 12px, 0) rotate(-8deg) scale(0.94); }
+  100% { transform: translate3d(22px, -24px, 80px) rotate(18deg) scale(1.08); }
+}
+
+@keyframes spin-wireframe {
+  to { transform: rotateX(68deg) rotateZ(388deg); }
+}
+
+.layout {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 18px 20px 24px;
+}
+
+main.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 28px;
+  background: rgba(10, 15, 27, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.chat-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 8px 18px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #67e8f9;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.chat-hero h2 {
+  color: #f8fafc;
+  font-size: clamp(1.5rem, 2.6vw, 2.45rem);
+  line-height: 1.03;
+  letter-spacing: -0.055em;
+}
+
+.chat-hero h2 strong {
+  background: linear-gradient(90deg, #67e8f9, #a78bfa 65%, #f0abfc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.chat-hero p {
+  margin-top: 10px;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.hero-chip,
+.live-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(103, 232, 249, 0.25);
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.08);
+  color: #a5f3fc;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 8px 12px;
+  white-space: nowrap;
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.08);
+}
+
+.hero-chip-dot,
+.live-status span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 12px #22d3ee;
+  animation: pulse-live 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-live {
+  50% { opacity: 0.45; transform: scale(0.7); }
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+#messages {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.2));
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+#chat-input,
+#send-btn,
+.filter-panel-wrapper,
+.filter-row,
+.filter-toggle-btn,
+#upload-btn,
+#file-input,
+#collection-list li,
+.sidebar,
+.navbar,
+.message {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+@media (max-width: 900px) {
+  body { overflow: auto; }
+  .navbar { margin: 10px; }
+  .layout { flex-direction: column; padding: 8px 10px 18px; }
+  .sidebar { width: 100%; max-height: 330px; }
+  main.chat-container { min-height: 620px; }
+  .orb-cyan { left: 65%; }
+}
+
+@media (max-width: 620px) {
+  .navbar h1 { font-size: 0.9rem; }
+  .navbar p { display: none; }
+  .live-status { display: none; }
+  .chat-hero { padding-top: 4px; }
+  .hero-chip { display: none; }
+  .chat-input { flex-wrap: wrap; }
+  .chat-input input { flex-basis: 100%; }
+  .rag-option { order: 2; }
+  .chat-input button { margin-left: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb, .wireframe, .hero-chip-dot, .live-status span { animation: none; }
+}

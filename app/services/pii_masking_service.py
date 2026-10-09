@@ -1,3 +1,5 @@
+import os
+
 try:
     from presidio_analyzer import AnalyzerEngine, Pattern, PatternRecognizer
     from presidio_anonymizer import AnonymizerEngine
@@ -38,7 +40,14 @@ class BankAccountRecognizer(PatternRecognizer):
 
 class PiiMaskingService:
     def __init__(self):
-        if AnalyzerEngine is None:
+        self.analyzer = None
+        self.anonymizer = None
+
+        # Loading Presidio's NLP engine can trigger a large spaCy model download.
+        # Keep local startup lightweight unless explicitly enabled in .env.
+        presidio_enabled = os.getenv("PRESIDIO_ENABLED", "false").lower() == "true"
+
+        if AnalyzerEngine is None or not presidio_enabled:
             # Dummy implementations when Presidio is unavailable
             class _DummyRegistry:
                 def add_recognizer(self, *args, **kwargs):
@@ -59,10 +68,26 @@ class PiiMaskingService:
             self.analyzer = _DummyAnalyzer()
             self.anonymizer = _DummyAnonymizer()
         else:
-            self.analyzer = AnalyzerEngine()
-            self.analyzer.registry.add_recognizer(CredentialRecognizer())
-            self.analyzer.registry.add_recognizer(BankAccountRecognizer())
-            self.anonymizer = AnonymizerEngine()
+            try:
+                # Presidio may attempt to load/download a spaCy model. Never let
+                # optional model setup prevent the API from starting locally.
+                self.analyzer = AnalyzerEngine()
+                self.analyzer.registry.add_recognizer(CredentialRecognizer())
+                self.analyzer.registry.add_recognizer(BankAccountRecognizer())
+                self.anonymizer = AnonymizerEngine()
+            except Exception as exc:
+                print(f"PII analyzer unavailable; using fallback masking mode: {exc}")
+
+                class _FallbackAnalyzer:
+                    def analyze(self, *args, **kwargs):
+                        return []
+
+                class _FallbackAnonymizer:
+                    def anonymize(self, *args, **kwargs):
+                        return type("Anon", (), {"text": args[0] if args else ""})()
+
+                self.analyzer = _FallbackAnalyzer()
+                self.anonymizer = _FallbackAnonymizer()
 
         # entities you want detected/masked
         self.entities = [
