@@ -13,6 +13,7 @@ langchain-anthropic
 langchain-qdrant
 langchain-text-splitters
 langchain-experimental
+langchain-ollama
 
 # Vector DB
 qdrant-client

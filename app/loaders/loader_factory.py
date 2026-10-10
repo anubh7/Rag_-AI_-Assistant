@@ -21,8 +21,15 @@ _LOADER_MAP = {
 }
 
 
-def get_documents(file_path: str, loader_key: str) -> List[Document]:
+def get_documents(file_path: str, loader_key: str, progress_cb=None) -> List[Document]:
+    """
+    Loads a file into Documents. `progress_cb(done, total)` is an optional
+    progress hook forwarded to loaders that support incremental reporting
+    (currently PDFs — critical for 3000+ page files).
+    """
     loader_fn = _LOADER_MAP.get(loader_key)
     if not loader_fn:
         raise UnsupportedFileTypeError(f"No loader registered for '{loader_key}'.")
+    if loader_key == "pdf":
+        return load_pdf(file_path, progress_cb=progress_cb)
     return loader_fn(file_path)

@@ -1,6 +1,27 @@
 #file-input { display: block; margin-bottom: 8px; width: 100%; cursor: pointer; }
 #upload-btn { width: 100%; padding: 8px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
 #upload-btn:hover { background: #059669; }
+
+/* Cancel button — only visible while a background upload job is running.
+   Red/neutral rather than green so it is never mistaken for the primary action. */
+#cancel-upload-btn {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+#cancel-upload-btn:hover:not(:disabled) { background: #dc2626; }
+#cancel-upload-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
 #upload-status { font-size: 12px; color: #6b7280; margin-top: 8px; line-height: 1.5; }
 
 /* Per-file result list */

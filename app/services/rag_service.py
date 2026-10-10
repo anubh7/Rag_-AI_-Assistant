@@ -16,7 +16,7 @@ class RAGService:
         self.qdrant_service = qdrant_service
         self.embedding_model = embedding_model
 
-    def ingest_chunks(self, chunks: List[Document], collection_name: str):
+    def ingest_chunks(self, chunks: List[Document], collection_name: str, progress_cb=None):
         if not self.qdrant_service.collection_exists(collection_name):
             self.qdrant_service.create_collection(collection_name)
 
@@ -24,5 +24,6 @@ class RAGService:
             documents=chunks,
             collection_name=collection_name,
             embedding_model=self.embedding_model,
+            progress_cb=progress_cb,
         )
         logger.info(f"Ingested {len(chunks)} chunks into '{collection_name}'.")

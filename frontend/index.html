@@ -110,6 +110,18 @@
       </button>
 
 
+      <!--
+        Shown only while a background upload job is running. Cancellation is
+        cooperative: the backend stops after the current embedding batch, so
+        anything already indexed stays searchable.
+      -->
+      <button id="cancel-upload-btn" hidden>
+
+        Cancel
+
+      </button>
+
+
       <div id="upload-status"></div>
 
 

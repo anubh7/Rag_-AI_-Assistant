@@ -29,9 +29,11 @@ app = FastAPI(
 
 
 # CORS configuration for frontend communication
+# Note: cannot use allow_origins=["*"] with allow_credentials=True per CORS spec
+# Must specify exact origin when credentials are allowed
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow any origin for development
+    allow_origins=["http://localhost:8002"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

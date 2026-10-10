@@ -40,6 +40,9 @@ class Settings:
         "sentence-transformers/all-MiniLM-L6-v2"
     )
 
+    # Local embeddings via Ollama (no API key required)
+    OLLAMA_EMBEDDING_MODEL = os.getenv("OLLAMA_EMBEDDING_MODEL", "nomic-embed-text")
+
     EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", 3072))
 
     # ---------------- Gemini LLM ----------------
@@ -49,6 +52,35 @@ class Settings:
         "GEMINI_CHAT_MODEL",
          "gemini-flash-latest"
     )
+
+    # ---------------- Ollama (local, no API key) ----------------
+    OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_CHAT_MODEL = os.getenv("OLLAMA_CHAT_MODEL", "llama3.1:8b")
+    # "-1" keeps loaded models resident in RAM so re-uploads / new chats never
+    # pay the 30-60s cold-start model load again (set to e.g. "10m" to free RAM).
+    OLLAMA_KEEP_ALIVE = os.getenv("OLLAMA_KEEP_ALIVE", "-1")
+
+    @property
+    def OLLAMA_KEEP_ALIVE_VALUE(self):
+        """
+        Ollama's API accepts either an integer number of seconds or a Go
+        duration string with a unit ("10m", "1h"). Env vars always arrive as
+        strings, so a bare "-1" is rejected with
+        'time: missing unit in duration "-1"' (HTTP 400) — which surfaces to
+        the user as a chat error. Coerce numeric-looking values to int here and
+        pass unit strings through untouched.
+        """
+        raw = str(self.OLLAMA_KEEP_ALIVE).strip()
+        try:
+            return int(raw)
+        except ValueError:
+            return raw
+
+    # ---------------- LLM generation ----------------
+    # Cap answer length (num_predict) so generations finish in bounded time.
+    LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", 600))
+    # Context window: retrieval context (top_k * ~chunk_size chars) + answer room.
+    LLM_NUM_CTX = int(os.getenv("LLM_NUM_CTX", 8192))
 
     # ---------------- Chunking ----------------
     CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", 1000))
@@ -61,7 +93,7 @@ class Settings:
 
     # ---------------- Uploads ----------------
     UPLOAD_DIR = os.getenv("UPLOAD_DIR", "app/uploads")
-    MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", 25))
+    MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", 50))
     ALLOWED_EXTENSIONS = {
         ".pdf",
         ".csv",

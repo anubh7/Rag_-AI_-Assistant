@@ -11,7 +11,13 @@ from app.llm.fallback import FallbackLLM
 
 
 def get_llm(provider: str = None):
-    """Return the configured LLM implementation, or a safe fallback when credentials are empty."""
+    """Return the configured LLM implementation, or a safe fallback when credentials are empty.
+
+    A configured GEMINI_API_KEY takes priority over LLM_PROVIDER so dropping a key
+    into .env is enough to switch back to Gemini without other changes.
+    """
+    if provider is None and settings.GEMINI_API_KEY:
+        provider = "gemini"
     provider = (provider or settings.LLM_PROVIDER or "gemini").lower()
 
     if provider == "gemini":

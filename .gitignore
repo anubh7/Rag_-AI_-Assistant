@@ -7,3 +7,13 @@ app/uploads/*/*
 !app/uploads/*/.gitkeep
 *.log
 .DS_Store
+
+# Local vector storage — ~170 MB of Qdrant shards, regenerated on upload.
+app/vector_db/local_qdrant/
+
+# SQLite database holding real user accounts — never commit.
+*.db
+
+# Editor / manual backups.
+*.bak
+

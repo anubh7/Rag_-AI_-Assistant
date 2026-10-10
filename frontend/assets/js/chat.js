@@ -97,39 +97,52 @@ const Chat = {
     // Get current filter spec from the filter panel
     const filters = FilterPanel.buildFilters();
 
-    // Call backend
+    // Create the assistant bubble up front so tokens stream into it live.
+    const container = document.getElementById("messages");
+    const bubble = document.createElement("div");
+    bubble.className = "message assistant";
+    bubble.textContent = "🤔 Thinking…";
+    container.appendChild(bubble);
+    container.scrollTop = container.scrollHeight;
+
+    // Call backend (SSE streaming — answer appears token by token)
     try {
 
-      const result = await Api.sendChat(
+      const result = await Api.sendChatStream(
         query,
         this.sessionId,
         activeCollection,
         useDocument,
-        filters
+        filters,
+        {
+          onToken: (token, fullAnswer) => {
+            bubble.textContent = fullAnswer;
+            container.scrollTop = container.scrollHeight;
+          },
+        }
       );
 
       if (result.status === "success") {
 
         const isNewSession = !document.querySelector(`#session-list li[data-id="${this.sessionId}"]`);
 
-        this.renderMessage("assistant", result.data.answer);
+        // Final answer (PII-masked server-side) + source citations.
+        bubble.textContent = result.data.answer || "…";
+        this.renderSources(bubble, result.data.sources);
 
         if (isNewSession) {
           UI.loadSessions();
         }
 
       } else {
-        this.renderMessage("assistant", `Error: ${result.message}`);
+        bubble.textContent = `Error: ${result.message}`;
       }
 
     } catch (error) {
 
       console.error("Chat error:", error);
-      this.renderMessage(
-        "assistant",
-        `⚠️ Could not reach the backend. Make sure the FastAPI server is running at http://localhost:8000. (${error.message})`
-      );
-
+      bubble.textContent =
+        `⚠️ Could not reach the backend. Make sure the FastAPI server is running at http://localhost:8001. (${error.message})`;
     }
 
   },
@@ -150,6 +163,32 @@ const Chat = {
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
 
+  },
+
+
+  /**
+   * Appends a small "Sources: file p.N · …" footer under a chat bubble so the
+   * user can see which parts of a large document grounded the answer.
+   */
+  renderSources(bubble, sources) {
+    if (!sources || !sources.length) return;
+
+    const labels = [];
+    sources.forEach(s => {
+      if (!s.source) return;
+      const file = String(s.source).split(/[\\/]/).pop();
+      const page = (s.metadata && s.metadata.page != null) ? ` p.${Number(s.metadata.page) + 1}` : "";
+      const label = file + page;
+      if (!labels.includes(label)) labels.push(label);
+    });
+    if (!labels.length) return;
+
+    const el = document.createElement("div");
+    el.className = "message-sources";
+    el.style.cssText =
+      "font-size:11px;color:#9ca3af;margin-top:6px;border-top:1px solid rgba(255,255,255,0.10);padding-top:4px;";
+    el.textContent = "Sources: " + labels.join(" · ");
+    bubble.appendChild(el);
   },
 
 
